@@ -345,7 +345,7 @@ impl Argument {
             Argument::Boolean(b) => format!("{}", b),
             Argument::Channel(c) => format!("{}", c.name(cache).await.unwrap()),
             Argument::Integer(i) => format!("{}", i),
-            Argument::Role(r) => format!("{}", r.to_role_cached(cache).await.unwrap().name),
+            Argument::Role(r) => format!("{}", r.to_role_cached(cache).unwrap().name),
             Argument::String(s) => s.clone(),
             Argument::User(u) => u.to_user_cached(cache).await.unwrap().name,
         }

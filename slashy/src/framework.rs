@@ -23,7 +23,7 @@ use serenity::{
             TypingStartEvent,
             VoiceServerUpdateEvent,
         },
-        guild::{Emoji, Guild, GuildUnavailable, Member, PartialGuild, Role},
+        guild::{Emoji, Guild, UnavailableGuild, Member, PartialGuild, Role},
         id::{ChannelId, CommandId, EmojiId, GuildId, MessageId, RoleId, UserId},
         interactions::{
             application_command::ApplicationCommandInteraction,
@@ -49,7 +49,7 @@ pub struct Framework<T: SettingsProvider> {
 impl<T: SettingsProvider> Framework<T> {
     /// Creates a new Framework
     pub async fn new(settings: T, application_id: u64, token: String) -> Self {
-        let http = Http::new_with_token_application_id(&token, application_id);
+        let http = Http::new_with_application_id(&token, application_id);
         let registered_command_cache = http
             .get_global_application_commands()
             .await
@@ -176,16 +176,16 @@ impl<T: SettingsProvider + Send + Sync> EventHandler for Framework<T> {
         guild_ban_addition, g, GuildId, b, User;
         guild_ban_removal, g, GuildId, b, User;
         guild_create, g, Guild, i, bool;
-        guild_delete, i, GuildUnavailable, f, Option<Guild>;
+        guild_delete, i, UnavailableGuild, f, Option<Guild>;
         guild_emojis_update, g, GuildId, c, HashMap<EmojiId, Emoji>;
         guild_integrations_update, g, GuildId;
-        guild_member_addition, g, GuildId, m, Member;
+        guild_member_addition, m, Member;
         guild_member_removal, g, GuildId, u, User, m, Option<Member>;
         guild_member_update, o, Option<Member>, n, Member;
         guild_members_chunk, c, GuildMembersChunkEvent;
-        guild_role_create, g, GuildId, n, Role;
+        guild_role_create, n, Role;
         guild_role_delete, g, GuildId, r, RoleId, ro, Option<Role>;
-        guild_role_update, g, GuildId, o, Option<Role>, n, Role;
+        guild_role_update, o, Option<Role>, n, Role;
         guild_unavailable, g, GuildId;
         guild_update, o, Option<Guild>, n, PartialGuild;
         invite_create, d, InviteCreateEvent;
@@ -197,14 +197,14 @@ impl<T: SettingsProvider + Send + Sync> EventHandler for Framework<T> {
         reaction_remove, r, Reaction;
         reaction_remove_all, c, ChannelId, r, MessageId;
         presence_replace, a, Vec<Presence>;
-        presence_update, n, PresenceUpdateEvent;
+        presence_update, n, Presence;
         resume, a, ResumedEvent;
         shard_stage_update, a, ShardStageUpdateEvent;
         typing_start, a, TypingStartEvent;
         unknown, n, String, a, Value;
         user_update, o, CurrentUser, n, CurrentUser;
         voice_server_update, a, VoiceServerUpdateEvent;
-        voice_state_update, a, Option<GuildId>, o, Option<VoiceState>, n, VoiceState;
+        voice_state_update, o, Option<VoiceState>, n, VoiceState;
         webhook_update, g, GuildId, b, ChannelId
     }
 
@@ -503,7 +503,7 @@ impl CommandContext {
                 i.create_interaction_response(&self.ctx, |c| {
                     c.kind(InteractionResponseType::ChannelMessageWithSource);
                     c.interaction_response_data(|n| {
-                        n.create_embed(embed);
+                        n.embed(embed);
 
                         n
                     });
