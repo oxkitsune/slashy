@@ -23,7 +23,7 @@ use serenity::{
             TypingStartEvent,
             VoiceServerUpdateEvent,
         },
-        guild::{Emoji, Guild, UnavailableGuild, Member, PartialGuild, Role},
+        guild::{Emoji, Guild, Member, PartialGuild, Role, UnavailableGuild},
         id::{ChannelId, CommandId, EmojiId, GuildId, MessageId, RoleId, UserId},
         interactions::{
             application_command::ApplicationCommandInteraction,

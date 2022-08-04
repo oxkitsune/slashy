@@ -1,6 +1,10 @@
-use std::sync::{Arc, RwLock as StdRwLock, Mutex as StdMutex};
+use std::sync::{Arc, Mutex as StdMutex, RwLock as StdRwLock};
 
-use serenity::{futures::{lock::Mutex, FutureExt}, model::id::GuildId, prelude::RwLock};
+use serenity::{
+    futures::{lock::Mutex, FutureExt},
+    model::id::GuildId,
+    prelude::RwLock,
+};
 
 /// Allows users to define custom settings providers for the handler to pull from.
 pub trait SettingsProvider {
